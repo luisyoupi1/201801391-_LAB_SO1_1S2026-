@@ -1,0 +1,54 @@
+services:
+  zot:
+    image: ${ZOT_IMAGE:-ghcr.io/project-zot/zot-linux-amd64:latest}
+    command: ["serve", "/etc/zot/config.json"]
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./infra/zot/config.json:/etc/zot/config.json:ro
+      - zot-data:/var/lib/registry
+
+  api1:
+    image: api1-${CARNET:-201801391}:${TAG:-1.0.0}
+    build:
+      context: .
+      dockerfile: api1/Dockerfile
+    environment:
+      CARNET: ${CARNET:-201801391}
+      VM_NAME: VM1
+      PORT: "8081"
+      API2_URL: http://api2:8082
+      API3_URL: http://api3:8083
+    ports:
+      - "8081:8081"
+
+  api2:
+    image: api2-${CARNET:-201801391}:${TAG:-1.0.0}
+    build:
+      context: .
+      dockerfile: api2/Dockerfile
+    environment:
+      CARNET: ${CARNET:-201801391}
+      VM_NAME: VM1
+      PORT: "8082"
+      API1_URL: http://api1:8081
+      API3_URL: http://api3:8083
+    ports:
+      - "8082:8082"
+
+  api3:
+    image: api3-${CARNET:-201801391}:${TAG:-1.0.0}
+    build:
+      context: .
+      dockerfile: api3/Dockerfile
+    environment:
+      CARNET: ${CARNET:-201801391}
+      VM_NAME: VM2
+      PORT: "8083"
+      API1_URL: http://api1:8081
+      API2_URL: http://api2:8082
+    ports:
+      - "8083:8083"
+
+volumes:
+  zot-data:
