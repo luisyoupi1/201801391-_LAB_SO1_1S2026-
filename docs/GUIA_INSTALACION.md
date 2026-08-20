@@ -54,7 +54,7 @@ Una respuesta vacía `{}` con HTTP 200 confirma que Zot está listo.
 ```bash
 vagrant ssh vm1 -c 'bash /proyecto/scripts/vm1/setup-containerd.sh'
 vagrant ssh vm1 -c 'PROJECT_DIR=/proyecto bash /proyecto/scripts/vm1/deploy-apis.sh'
-vagrant ssh vm1 -c 'sudo nerdctl ps'
+vagrant ssh vm1 -c 'sudo buildctl debug workers && sudo nerdctl ps'
 ```
 
 El segundo script construye, publica, elimina, extrae y ejecuta las dos imágenes desde `192.168.56.13:5000`.
@@ -64,7 +64,7 @@ El segundo script construye, publica, elimina, extrae y ejecuta las dos imágene
 ```bash
 vagrant ssh vm2 -c 'bash /proyecto/scripts/vm2/setup-podman.sh'
 vagrant ssh vm2 -c 'PROJECT_DIR=/proyecto bash /proyecto/scripts/vm2/deploy-api3.sh'
-vagrant ssh vm2 -c 'sudo podman ps'
+vagrant ssh vm2 -c 'podman ps'
 ```
 
 ## 6. Probar el sistema completo
@@ -93,14 +93,14 @@ curl -s http://192.168.56.12:8083/api3/201801391/call-api2 | jq .
 Detén API3 de forma temporal:
 
 ```bash
-vagrant ssh vm2 -c 'sudo podman stop api3'
+vagrant ssh vm2 -c 'podman stop api3'
 curl -s http://192.168.56.11:8081/api1/201801391/call-api3 | jq .
 ```
 
 La salida debe mostrar `connection: false`. Restáurala inmediatamente:
 
 ```bash
-vagrant ssh vm2 -c 'sudo podman start api3'
+vagrant ssh vm2 -c 'podman start api3'
 curl -s http://192.168.56.11:8081/api1/201801391/call-api3 | jq .
 ```
 
@@ -135,7 +135,7 @@ git remote add origin URL_PRIVADA_DEL_REPOSITORIO
 git push -u origin main
 ```
 
-En GitHub, abre `Settings > Collaborators` y agrega `roldyoran`, `JoseLorenzana272` y `KINGR0X`. Verifica visualmente que las tres invitaciones aparezcan antes de entregar.
+En GitHub, abre `Settings > Collaborators` y agrega `JoseLorenzana272` y `KINGR0X`. Verifica visualmente que ambas invitaciones aparezcan antes de entregar.
 
 ## 10. Apagar el laboratorio
 
@@ -146,3 +146,23 @@ vagrant halt
 ```
 
 `vagrant destroy` elimina las VMs y su evidencia local; úsalo únicamente después de entregar y conservar tus capturas.
+
+## 11. Evidencia de la instalación ejecutada
+
+La instalación real fue validada con las tres VMs activas bajo KVM:
+
+![VM1, VM2 y VM3 en ejecución](evidencias/capturas/01-vms-kvm-virt-manager.jpg)
+
+Los runtimes quedaron distribuidos según el enunciado:
+
+- VM1: Containerd con API1 y API2.
+- VM2: Podman rootless con API3.
+- VM3: Docker con Zot.
+
+![Containerd en VM1](evidencias/capturas/03-containerd-vm1.jpg)
+
+![Podman en VM2](evidencias/capturas/04-podman-vm2.jpg)
+
+![Docker y Zot en VM3](evidencias/capturas/05-docker-zot-vm3.jpg)
+
+La operación cotidiana del laboratorio, incluyendo el montaje del USB, las consultas y el apagado seguro, está documentada en [MANUAL_USUARIO.md](MANUAL_USUARIO.md). El catálogo completo de pruebas está en [EVIDENCIAS.md](EVIDENCIAS.md).

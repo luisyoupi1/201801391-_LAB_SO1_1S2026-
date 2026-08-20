@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
 sudo apt-get install -y ca-certificates containerd curl tar
 
-if ! command -v nerdctl >/dev/null 2>&1; then
+if ! command -v nerdctl >/dev/null 2>&1 || ! command -v buildkitd >/dev/null 2>&1; then
   case "$(uname -m)" in
     x86_64) nerdctl_arch="amd64" ;;
     aarch64|arm64) nerdctl_arch="arm64" ;;
@@ -17,10 +17,13 @@ if ! command -v nerdctl >/dev/null 2>&1; then
   temp_dir="$(mktemp -d)"
   trap 'rm -rf -- "$temp_dir"' EXIT
   curl --fail --location --show-error \
-    "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${nerdctl_arch}.tar.gz" \
-    --output "${temp_dir}/nerdctl.tar.gz"
-  tar -xzf "${temp_dir}/nerdctl.tar.gz" -C "$temp_dir" nerdctl
-  sudo install -m 0755 "${temp_dir}/nerdctl" /usr/local/bin/nerdctl
+    "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-full-${NERDCTL_VERSION}-linux-${nerdctl_arch}.tar.gz" \
+    --output "${temp_dir}/nerdctl-full.tar.gz"
+  tar -xzf "${temp_dir}/nerdctl-full.tar.gz" -C "$temp_dir" \
+    bin/nerdctl bin/buildctl bin/buildkitd
+  sudo install -m 0755 "${temp_dir}/bin/nerdctl" /usr/local/bin/nerdctl
+  sudo install -m 0755 "${temp_dir}/bin/buildctl" /usr/local/bin/buildctl
+  sudo install -m 0755 "${temp_dir}/bin/buildkitd" /usr/local/bin/buildkitd
 fi
 
 sudo install -d -m 0755 /etc/containerd
@@ -38,6 +41,24 @@ EOF
 
 sudo systemctl enable --now containerd
 sudo systemctl restart containerd
-sudo nerdctl version
 
-echo "Containerd y nerdctl quedaron listos para el registro ${REGISTRY}."
+sudo tee /etc/systemd/system/buildkit.service >/dev/null <<'EOF'
+[Unit]
+Description=BuildKit
+Requires=containerd.service
+After=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/buildkitd --oci-worker=false --containerd-worker=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now buildkit
+sudo nerdctl version
+sudo buildctl debug workers
+
+echo "Containerd, nerdctl y BuildKit quedaron listos para el registro ${REGISTRY}."

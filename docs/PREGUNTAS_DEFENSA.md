@@ -6,7 +6,7 @@ El objetivo es demostrar que una imagen OCI puede distribuirse mediante un regis
 
 ## ¿Qué hace nerdctl?
 
-Containerd no ofrece por sí solo una experiencia de construcción y ejecución equivalente a Docker. nerdctl es un cliente compatible con flujos de construcción, `push`, `pull` y ejecución sobre Containerd.
+Containerd no ofrece por sí solo una experiencia de construcción y ejecución equivalente a Docker. nerdctl es un cliente compatible con flujos de construcción, `push`, `pull` y ejecución sobre Containerd; BuildKit realiza la construcción de las imágenes.
 
 ## ¿Cómo verifica una API a otra?
 

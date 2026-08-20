@@ -102,12 +102,13 @@ Si la API destino no responde o su `status` no es `UP`, el mismo endpoint devuel
 ## Documentación entregada
 
 - [Manual técnico](docs/MANUAL_TECNICO.md)
+- [Manual de usuario](docs/MANUAL_USUARIO.md)
 - [Guía de instalación](docs/GUIA_INSTALACION.md)
-- [Plan de evidencias](docs/EVIDENCIAS.md)
+- [Evidencias funcionales](docs/EVIDENCIAS.md)
 - [Resultados de pruebas ejecutadas](docs/RESULTADOS_PRUEBAS.md)
 - [Preguntas para la defensa](docs/PREGUNTAS_DEFENSA.md)
-- [Auditoría de seguridad del enunciado](docs/AUDITORIA_PDF.md)
+- [Auditoría de cumplimiento](docs/AUDITORIA_PDF.md)
 
 ## Repositorio solicitado por el enunciado
 
-Al terminar tus capturas, crea un repositorio privado llamado `201801391_LAB_SO1_1S2026` y agrega como colaboradores a `roldyoran`, `JoseLorenzana272` y `KINGR0X`. Esa publicación no se realiza automáticamente para no modificar tu cuenta de GitHub sin autorización.
+Las capturas funcionales ya están organizadas en [docs/EVIDENCIAS.md](docs/EVIDENCIAS.md). Crea o renombra el repositorio privado exactamente como `201801391_LAB_SO1_2S2026` y agrega como colaboradores a `JoseLorenzana272` y `KINGR0X`. Esa publicación no se realiza automáticamente para no modificar tu cuenta de GitHub sin autorización.

@@ -1,0 +1,12 @@
+.git
+.github
+.vagrant
+.tmp
+bin
+docs
+evidencias
+scripts
+*.md
+*.log
+Vagrantfile
+docker-compose.yml

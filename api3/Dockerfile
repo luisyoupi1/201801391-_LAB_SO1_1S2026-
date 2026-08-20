@@ -5,9 +5,8 @@ COPY internal ./internal
 COPY api3 ./api3
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/api ./api3
 
-FROM alpine:3.21
-RUN addgroup -S app && adduser -S -G app app
-COPY --from=build /out/api /usr/local/bin/api
-USER app
+FROM scratch
+COPY --from=build /out/api /api
+USER 65532:65532
 EXPOSE 8083
-ENTRYPOINT ["/usr/local/bin/api"]
+ENTRYPOINT ["/api"]
