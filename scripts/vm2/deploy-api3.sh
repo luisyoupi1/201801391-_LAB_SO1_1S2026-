@@ -8,13 +8,13 @@ REGISTRY="${REGISTRY:-192.168.56.13:5000}"
 VM1_IP="${VM1_IP:-192.168.56.11}"
 
 image="${REGISTRY}/api3-${CARNET}:${TAG}"
-sudo podman build -f "${PROJECT_DIR}/api3/Dockerfile" -t "$image" "$PROJECT_DIR"
-sudo podman push --tls-verify=false "$image"
-sudo podman image rm "$image"
-sudo podman pull --tls-verify=false "$image"
+podman build -f "${PROJECT_DIR}/api3/Dockerfile" -t "$image" "$PROJECT_DIR"
+podman push --tls-verify=false "$image"
+podman image rm "$image"
+podman pull --tls-verify=false "$image"
 
-sudo podman rm -f api3 >/dev/null 2>&1 || true
-sudo podman run -d --name api3 --restart always --network host \
+podman rm -f api3 >/dev/null 2>&1 || true
+podman run -d --name api3 --restart always --network host \
   -e CARNET="$CARNET" -e VM_NAME=VM2 -e PORT=8083 \
   -e API1_URL="http://${VM1_IP}:8081" -e API2_URL="http://${VM1_IP}:8082" \
   "$image"

@@ -14,5 +14,7 @@ location = "${REGISTRY}"
 insecure = true
 EOF
 
-sudo podman info --format '{{.Host.OCIRuntime.Name}}'
+# Mantiene vivos los contenedores rootless al cerrar la sesión SSH.
+sudo loginctl enable-linger "$USER"
+podman info --format '{{.Host.OCIRuntime.Name}}'
 echo "Podman quedó listo para el registro ${REGISTRY}."
