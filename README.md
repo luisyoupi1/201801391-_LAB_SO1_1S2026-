@@ -106,7 +106,6 @@ Si la API destino no responde o su `status` no es `UP`, el mismo endpoint devuel
 - [Guía de instalación](docs/GUIA_INSTALACION.md)
 - [Evidencias funcionales](docs/EVIDENCIAS.md)
 - [Resultados de pruebas ejecutadas](docs/RESULTADOS_PRUEBAS.md)
-- [Preguntas para la defensa](docs/PREGUNTAS_DEFENSA.md)
 - [Auditoría de cumplimiento](docs/AUDITORIA_PDF.md)
 
 ## Repositorio solicitado por el enunciado
