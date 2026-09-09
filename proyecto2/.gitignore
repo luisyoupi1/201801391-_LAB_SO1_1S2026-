@@ -1,0 +1,11 @@
+bin/
+kernel/*.ko
+kernel/*.o
+kernel/*.mod*
+kernel/.*.cmd
+kernel/Module.symvers
+kernel/modules.order
+daemon/internal/ebpf/vmlinux.h
+daemon/internal/ebpf/*.o
+evidencias/*.log
+.env

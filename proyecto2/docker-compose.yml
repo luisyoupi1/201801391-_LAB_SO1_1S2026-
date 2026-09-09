@@ -1,0 +1,72 @@
+services:
+  valkey:
+    image: valkey/valkey:8.1-alpine
+    container_name: so1-valkey-${CARNET:-201801391}
+    command: ["valkey-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: so1-prometheus-${CARNET:-201801391}
+    restart: unless-stopped
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=7d"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    container_name: so1-grafana-${CARNET:-201801391}
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - valkey
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: so1-${CARNET:-201801391}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+  workload-memory:
+    profiles: ["build"]
+    image: so1-${CARNET:-201801391}-memory:latest
+    build: ./workloads/memory
+
+  workload-cpu:
+    profiles: ["build"]
+    image: so1-${CARNET:-201801391}-cpu:latest
+    build: ./workloads/cpu
+
+  workload-low:
+    profiles: ["build"]
+    image: so1-${CARNET:-201801391}-low:latest
+    build: ./workloads/low
+
+  workload-intruder:
+    profiles: ["build"]
+    image: so1-${CARNET:-201801391}-intruder:latest
+    build: ./workloads/intruder
+
+volumes:
+  valkey_data:
+  prometheus_data:
+  grafana_data:
+

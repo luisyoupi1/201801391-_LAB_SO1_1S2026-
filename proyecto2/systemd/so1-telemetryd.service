@@ -1,0 +1,21 @@
+[Unit]
+Description=SO1 Proyecto 2 - Telemetria de contenedores 201801391
+After=network-online.target docker.service cron.service
+Wants=network-online.target docker.service cron.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/etc/so1-proyecto2-201801391.env
+WorkingDirectory=/opt/so1-proyecto2-201801391
+ExecStart=/usr/local/bin/so1-telemetryd-201801391
+Restart=on-failure
+RestartSec=10s
+TimeoutStartSec=10min
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
+
