@@ -21,20 +21,29 @@ if missing:
     raise SystemExit(f"Faltan archivos: {missing}")
 
 dashboard = json.loads((ROOT / "grafana/dashboards/so1-containers.json").read_text(encoding="utf-8"))
-titles = {panel.get("title") for panel in dashboard.get("panels", [])}
-expected = {
-    "Total de RAM",
-    "RAM usada",
-    "Memoria libre",
-    "Total contenedores eliminados",
-    "Uso de RAM a lo largo del tiempo",
-    "Contenedores eliminados a lo largo del tiempo",
-    "Top 5 contenedores por RAM (histórico)",
-    "Top 5 contenedores por CPU (histórico)",
-    "Eventos eBPF sys_kill",
+panels = dashboard.get("panels", [])
+ids = [panel["id"] for panel in panels]
+if len(ids) != len(set(ids)):
+    raise SystemExit("IDs de panel duplicados")
+required_metrics = {
+    "so1_ram_total_bytes", "so1_ram_free_bytes", "so1_ram_used_bytes",
+    "so1_containers_deleted_total", "so1_ebpf_kill_events_total",
+    "so1_container_memory_percent", "so1_container_cpu_percent",
+    "so1_last_success_timestamp_seconds",
 }
-if titles != expected:
-    raise SystemExit(f"Paneles inesperados. Faltan={expected-titles}; sobran={titles-expected}")
+expressions = "\n".join(target.get("expr", "") for panel in panels for target in panel.get("targets", []))
+for metric in required_metrics:
+    if metric not in expressions:
+        raise SystemExit(f"Falta métrica en dashboard: {metric}")
+for index, panel in enumerate(panels):
+    box = panel["gridPos"]
+    if box["x"] < 0 or box["w"] <= 0 or box["h"] <= 0 or box["x"] + box["w"] > 24:
+        raise SystemExit(f"Panel fuera de cuadrícula: {panel['id']}")
+    for other in panels[:index]:
+        prior = other["gridPos"]
+        if (box["x"] < prior["x"] + prior["w"] and prior["x"] < box["x"] + box["w"]
+            and box["y"] < prior["y"] + prior["h"] and prior["y"] < box["y"] + box["h"]):
+            raise SystemExit(f"Paneles superpuestos: {panel['id']} y {other['id']}")
 
 kernel = (ROOT / "kernel/continfo.c").read_text(encoding="utf-8")
 for token in ("task_struct", "get_task_mm", "task_cputime_adjusted", "PROC_NAME"):

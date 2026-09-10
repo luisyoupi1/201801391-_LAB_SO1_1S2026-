@@ -43,5 +43,6 @@ chmod 0600 "$ENV_FILE"
 
 sed "s/201801391/${CARNET}/g" "$SOURCE_ROOT/systemd/so1-telemetryd.service" > "$SERVICE_FILE"
 systemctl daemon-reload
-systemctl enable --now so1-telemetryd.service
+systemctl enable so1-telemetryd.service
+systemctl restart so1-telemetryd.service
 echo "Servicio instalado. Consulte: systemctl status so1-telemetryd"

@@ -16,6 +16,12 @@ Implementación integral de telemetría y gestión de contenedores con:
 
 ## Vista general
 
+El diseño actualizado organiza la información en cuatro secciones: estado, memoria,
+consumo por contenedor y actividad. Incluye disponibilidad del exporter, antigüedad
+de la última lectura y barras de consumo con porcentajes reales.
+
+Las capturas siguientes corresponden a la versión anterior.
+
 ### Dashboard de observabilidad
 
 ![Dashboard principal de Grafana](docs/evidencias/capturas/02-dashboard-grafana-metricas.png)
@@ -52,6 +58,9 @@ make test
 sudo make install
 ```
 
+El Makefile selecciona Go 1.24 de Ubuntu cuando está instalado. Para usar otra
+versión compatible: `make all GO=/ruta/a/go` (mínimo Go 1.20).
+
 Estado del servicio:
 
 ```bash
@@ -70,7 +79,7 @@ make kernel              # compila el módulo C
 make ebpf                # genera vmlinux.h y compila la sonda
 make daemon              # compila el servicio Go
 make workloads           # construye las imágenes de carga
-make test                # pruebas unitarias y validación estructural
+make test                # pruebas con detector de carreras, go vet y validación estructural
 make infra-up            # Valkey, Prometheus y Grafana
 sudo make install        # instala y activa el servicio
 sudo make uninstall      # desinstala de forma limpia

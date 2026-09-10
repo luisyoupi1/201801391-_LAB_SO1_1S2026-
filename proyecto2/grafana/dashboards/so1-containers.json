@@ -1,5 +1,7 @@
 {
-  "annotations": {"list": []},
+  "annotations": {
+    "list": []
+  },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -8,104 +10,803 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "unit": "bytes", "thresholds": {"mode": "absolute", "steps": [{"color": "blue", "value": null}]}}, "overrides": []},
-      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "id": 10,
+      "type": "text",
+      "title": "",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "# Telemetría de contenedores\n**Sistemas Operativos 1 · Proyecto 2 · 201801391**\n\nSupervisa memoria, actividad del daemon y eventos del kernel. Selecciona un intervalo para comparar el consumo histórico."
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      }
+    },
+    {
+      "id": 11,
+      "title": "01 · Estado del sistema",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "Sin datos"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 6,
+        "h": 4
+      },
       "id": 1,
-      "options": {"colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
-      "targets": [{"editorMode": "code", "expr": "so1_ram_total_bytes", "instant": true, "legendFormat": "Total RAM", "range": false, "refId": "A"}],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_ram_total_bytes",
+          "instant": true,
+          "legendFormat": "Total RAM",
+          "range": false,
+          "refId": "A"
+        }
+      ],
       "title": "Total de RAM",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "unit": "bytes", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}}, "overrides": []},
-      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "Sin datos"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 5,
+        "w": 6,
+        "h": 4
+      },
       "id": 2,
-      "options": {"colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
-      "targets": [{"editorMode": "code", "expr": "so1_ram_free_bytes", "instant": true, "legendFormat": "RAM libre", "range": false, "refId": "A"}],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_ram_free_bytes",
+          "instant": true,
+          "legendFormat": "RAM libre",
+          "range": false,
+          "refId": "A"
+        }
+      ],
       "title": "Memoria libre",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "unit": "bytes", "thresholds": {"mode": "absolute", "steps": [{"color": "orange", "value": null}]}}, "overrides": []},
-      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "Sin datos"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 6,
+        "h": 4
+      },
       "id": 3,
-      "options": {"colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
-      "targets": [{"editorMode": "code", "expr": "so1_ram_used_bytes", "instant": true, "legendFormat": "RAM usada", "range": false, "refId": "A"}],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_ram_used_bytes",
+          "instant": true,
+          "legendFormat": "RAM usada",
+          "range": false,
+          "refId": "A"
+        }
+      ],
       "title": "RAM usada",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}]}}, "overrides": []},
-      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "Sin datos"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 5,
+        "w": 6,
+        "h": 4
+      },
       "id": 4,
-      "options": {"colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
-      "targets": [{"editorMode": "code", "expr": "so1_containers_deleted_total", "instant": true, "legendFormat": "Eliminados", "range": false, "refId": "A"}],
-      "title": "Total contenedores eliminados",
-      "type": "stat"
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_containers_deleted_total",
+          "instant": true,
+          "legendFormat": "Eliminados",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Eliminaciones confirmadas · sesión",
+      "type": "stat",
+      "description": "Contador de eliminaciones registradas en Valkey con confirmación eBPF. Se reinicia con el daemon."
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "unit": "bytes"}, "overrides": []},
-      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 4},
+      "id": 12,
+      "title": "02 · Memoria y disponibilidad",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "bytes",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 8
+      },
       "id": 5,
-      "options": {"legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
-      "targets": [{"editorMode": "code", "expr": "so1_ram_used_bytes", "legendFormat": "RAM usada", "range": true, "refId": "A"}],
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_ram_used_bytes",
+          "legendFormat": "RAM usada",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "editorMode": "code",
+          "expr": "so1_ram_free_bytes",
+          "legendFormat": "RAM libre",
+          "range": true,
+          "refId": "B"
+        }
+      ],
       "title": "Uso de RAM a lo largo del tiempo",
       "type": "timeseries"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "purple", "value": null}]}}, "overrides": []},
-      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 4},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "noValue": "Sin datos",
+          "min": 0,
+          "max": 100
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 10,
+        "w": 8,
+        "h": 8
+      },
+      "id": 13,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "100 * so1_ram_used_bytes / so1_ram_total_bytes",
+          "instant": true,
+          "legendFormat": "RAM usada",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "RAM utilizada",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 120
+              }
+            ]
+          },
+          "noValue": "Sin datos"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 8,
+        "h": 4
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "time() - (so1_last_success_timestamp_seconds > 0)",
+          "instant": true,
+          "legendFormat": "Eliminados",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Tiempo desde la última lectura",
+      "type": "stat",
+      "description": "Si aumenta, el daemon no está actualizando la telemetría. Sin datos indica que todavía no hubo una lectura válida."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "Sin datos",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Sin conexión",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Conectado",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 18,
+        "w": 8,
+        "h": 4
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "up{job=\"so1-telemetry-201801391\"}",
+          "instant": true,
+          "legendFormat": "Eliminados",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Exporter de métricas",
+      "type": "stat",
+      "description": "Contador de eliminaciones registradas en Valkey con confirmación eBPF. Se reinicia con el daemon."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 18,
+        "w": 8,
+        "h": 4
+      },
       "id": 6,
-      "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "center", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
-      "targets": [{"editorMode": "code", "expr": "so1_ebpf_kill_events_total", "instant": true, "legendFormat": "Eventos eBPF", "range": false, "refId": "A"}],
-      "title": "Eventos eBPF sys_kill",
-      "type": "stat"
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "so1_ebpf_kill_events_total",
+          "instant": true,
+          "legendFormat": "Eventos eBPF",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Eventos sys_kill · sesión",
+      "type": "stat",
+      "description": "Llamadas observadas por eBPF, no necesariamente señales ejecutadas con éxito. El contador se reinicia con el daemon."
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "unit": "short"}, "overrides": []},
-      "gridPos": {"h": 7, "w": 24, "x": 0, "y": 12},
-      "id": 7,
-      "options": {"barRadius": 0, "barWidth": 0.8, "fullHighlight": false, "groupWidth": 0.7, "legend": {"calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true}, "orientation": "auto", "showValue": "auto", "stacking": "none", "tooltip": {"mode": "single", "sort": "none"}, "xTickLabelRotation": 0, "xTickLabelSpacing": 100},
-      "targets": [{"editorMode": "code", "expr": "increase(so1_containers_deleted_total[$__rate_interval])", "legendFormat": "Eliminados", "range": true, "refId": "A"}],
-      "title": "Contenedores eliminados a lo largo del tiempo",
-      "type": "barchart"
+      "id": 16,
+      "title": "03 · Consumo por contenedor",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 24,
+        "h": 1
+      }
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "unit": "percent"}, "overrides": []},
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 19},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "percent",
+          "min": 0,
+          "noValue": "Sin datos en este intervalo"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      },
       "id": 8,
-      "options": {"displayLabels": ["name", "percent"], "legend": {"displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"]}, "pieType": "pie", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "tooltip": {"mode": "single", "sort": "none"}},
-      "targets": [{"editorMode": "code", "expr": "topk(5, max_over_time(so1_container_memory_percent[$__range]))", "instant": true, "legendFormat": "{{name}} ({{container_id}})", "range": false, "refId": "A"}],
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "topk(5, max_over_time(so1_container_memory_percent[$__range]))",
+          "instant": true,
+          "legendFormat": "{{name}} ({{container_id}})",
+          "range": false,
+          "refId": "A"
+        }
+      ],
       "title": "Top 5 contenedores por RAM (histórico)",
-      "type": "piechart"
+      "type": "bargauge",
+      "description": "Máximo observado por contenedor dentro del intervalo seleccionado. Cada barra muestra el porcentaje real; no una proporción del top 5."
     },
     {
-      "datasource": {"type": "prometheus", "uid": "so1-prometheus"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "unit": "percent"}, "overrides": []},
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 19},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "percent",
+          "min": 0,
+          "noValue": "Sin datos en este intervalo"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      },
       "id": 9,
-      "options": {"displayLabels": ["name", "percent"], "legend": {"displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"]}, "pieType": "pie", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "tooltip": {"mode": "single", "sort": "none"}},
-      "targets": [{"editorMode": "code", "expr": "topk(5, max_over_time(so1_container_cpu_percent[$__range]))", "instant": true, "legendFormat": "{{name}} ({{container_id}})", "range": false, "refId": "A"}],
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "topk(5, max_over_time(so1_container_cpu_percent[$__range]))",
+          "instant": true,
+          "legendFormat": "{{name}} ({{container_id}})",
+          "range": false,
+          "refId": "A"
+        }
+      ],
       "title": "Top 5 contenedores por CPU (histórico)",
-      "type": "piechart"
+      "type": "bargauge",
+      "description": "Máximo observado por contenedor dentro del intervalo seleccionado. Cada barra muestra el porcentaje real; no una proporción del top 5."
+    },
+    {
+      "id": 17,
+      "title": "04 · Actividad de gestión",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "so1-prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 65,
+            "lineWidth": 0
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 7
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "increase(so1_containers_deleted_total[$__rate_interval])",
+          "legendFormat": "Eliminados",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Eliminaciones confirmadas por intervalo",
+      "type": "timeseries",
+      "description": "Incremento estimado por Prometheus; puede tener decimales por extrapolación."
     }
   ],
   "refresh": "10s",
   "schemaVersion": 39,
-  "tags": ["SO1", "201801391", "kernel", "eBPF"],
-  "templating": {"list": []},
-  "time": {"from": "now-30m", "to": "now"},
+  "tags": [
+    "SO1",
+    "201801391",
+    "kernel",
+    "eBPF"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
   "timezone": "browser",
   "title": "SO1 - Contenedores 201801391",
   "uid": "so1-201801391",
-  "version": 1,
-  "weekStart": ""
+  "version": 2,
+  "weekStart": "",
+  "description": "Memoria, disponibilidad y actividad de contenedores. Los contadores de sesión se reinician con el daemon."
 }

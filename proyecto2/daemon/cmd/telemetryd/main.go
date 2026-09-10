@@ -82,7 +82,9 @@ func run() error {
 	} else {
 		defer auditor.Close()
 		auditor.Start(ctx, func(event model.KillEvent) {
-			registry.ObserveEBPF()
+			if event.Origin == "sys_enter_kill" {
+				registry.ObserveEBPF()
+			}
 			if err := store.RecordObservedKill(context.Background(), event); err != nil {
 				log.Printf("guardar evento eBPF: %v", err)
 			}
@@ -131,11 +133,13 @@ func cycle(ctx context.Context, cfg config.Config, manager *dockerctl.Manager,
 			continue
 		}
 		var confirmation <-chan model.KillEvent
+		cancelExpectation := func() {}
 		if auditor != nil {
-			confirmation = auditor.Expect(uint32(victim.Container.PID))
+			confirmation, cancelExpectation = auditor.Expect(uint32(victim.Container.PID))
 		}
 		log.Printf("deteniendo %s perfil=%s score=%.2f", victim.Container.Name, victim.Container.Profile, victim.Score)
 		if err := manager.Stop(ctx, victim.Container); err != nil {
+			cancelExpectation()
 			log.Printf("detener %s: %v", victim.Container.Name, err)
 			continue
 		}
@@ -150,9 +154,11 @@ func cycle(ctx context.Context, cfg config.Config, manager *dockerctl.Manager,
 			case <-time.After(cfg.DeleteConfirmTimeout):
 				log.Printf("sin confirmación eBPF para PID %d", victim.Container.PID)
 			case <-ctx.Done():
+				cancelExpectation()
 				return ctx.Err()
 			}
 		}
+		cancelExpectation()
 		if err := manager.Remove(ctx, victim.Container); err != nil {
 			log.Printf("eliminar %s: %v", victim.Container.Name, err)
 			continue

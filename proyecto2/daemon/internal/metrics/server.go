@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -81,8 +80,11 @@ func (r *Registry) ServeHTTP(writer http.ResponseWriter, request *http.Request) 
 	fmt.Fprintf(writer, "so1_ram_used_bytes %d\n", r.memory.UsedKB*1024)
 	fmt.Fprintf(writer, "so1_containers_deleted_total %d\n", r.deleted)
 	fmt.Fprintf(writer, "so1_ebpf_kill_events_total %d\n", r.ebpfEvents)
-	fmt.Fprintf(writer, "so1_last_success_timestamp_seconds %d\n", r.lastSuccess.Unix())
+	fmt.Fprintf(writer, "so1_last_success_timestamp_seconds %d\n", lastSuccessUnix(r.lastSuccess))
 	for _, item := range r.current {
+		if !item.Container.Running {
+			continue
+		}
 		labels := labels(item.Container.ID, item.Container.Name, item.Container.Profile)
 		fmt.Fprintf(writer, "so1_container_memory_percent%s %s\n", labels, number(item.MemoryPercent))
 		fmt.Fprintf(writer, "so1_container_cpu_percent%s %s\n", labels, number(item.CPUPercent))
@@ -100,7 +102,7 @@ func (r *Registry) ServeHTTP(writer http.ResponseWriter, request *http.Request) 
 		if len(short) > 12 {
 			short = short[:12]
 		}
-		label := fmt.Sprintf("{container_id=%q,name=%q}", escape(short), escape(peak.Name))
+		label := fmt.Sprintf("{container_id=%q,name=%q}", short, peak.Name)
 		fmt.Fprintf(writer, "so1_container_memory_peak_percent%s %s\n", label, number(peak.Memory))
 		fmt.Fprintf(writer, "so1_container_cpu_peak_percent%s %s\n", label, number(peak.CPU))
 	}
@@ -110,11 +112,14 @@ func labels(id, name, profile string) string {
 	if len(id) > 12 {
 		id = id[:12]
 	}
-	return fmt.Sprintf("{container_id=%q,name=%q,profile=%q}", escape(id), escape(name), escape(profile))
-}
-
-func escape(value string) string {
-	return strings.NewReplacer("\\", "\\\\", "\n", "\\n", "\"", "\\\"").Replace(value)
+	return fmt.Sprintf("{container_id=%q,name=%q,profile=%q}", id, name, profile)
 }
 
 func number(value float64) string { return strconv.FormatFloat(value, 'f', 4, 64) }
+
+func lastSuccessUnix(t time.Time) int64 {
+	if t.IsZero() {
+		return 0
+	}
+	return t.Unix()
+}

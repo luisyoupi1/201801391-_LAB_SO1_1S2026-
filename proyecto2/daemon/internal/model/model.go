@@ -44,6 +44,7 @@ type ContainerMetric struct {
 }
 
 type KillEvent struct {
+	Origin      string    `json:"origin,omitempty"`
 	SourcePID   uint32    `json:"source_pid"`
 	TargetPID   uint32    `json:"target_pid"`
 	Signal      int32     `json:"signal"`

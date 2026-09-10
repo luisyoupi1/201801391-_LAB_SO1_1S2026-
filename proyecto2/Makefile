@@ -1,4 +1,5 @@
 CARNET ?= 201801391
+GO ?= $(shell if test -x /usr/lib/go-1.24/bin/go; then echo /usr/lib/go-1.24/bin/go; else command -v go; fi)
 ROOT := $(CURDIR)
 BIN_DIR := $(ROOT)/bin
 BPF_DIR := $(ROOT)/daemon/internal/ebpf
@@ -23,10 +24,11 @@ ebpf: $(BPF_DIR)/vmlinux.h
 		-o $(BPF_DIR)/kill_monitor.bpf.o
 
 daemon: $(BIN_DIR)
-	cd daemon && CGO_ENABLED=0 go build -buildvcs=false -trimpath -ldflags "-s -w" -o $(BIN_DIR)/telemetryd ./cmd/telemetryd
+	cd daemon && CGO_ENABLED=0 $(GO) build -buildvcs=false -trimpath -ldflags "-s -w" -o $(BIN_DIR)/telemetryd ./cmd/telemetryd
 
 test:
-	cd daemon && go test ./internal/decision ./internal/procfs ./internal/model
+	cd daemon && $(GO) test -race ./...
+	cd daemon && $(GO) vet ./...
 	python3 scripts/validate_project.py
 
 infra-up:

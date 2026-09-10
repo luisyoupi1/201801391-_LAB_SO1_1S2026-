@@ -18,8 +18,9 @@ import (
 )
 
 type objects struct {
-	TraceKill *ebpf.Program `ebpf:"trace_kill"`
-	Events    *ebpf.Map     `ebpf:"events"`
+	TraceSignal *ebpf.Program `ebpf:"trace_signal"`
+	TraceKill   *ebpf.Program `ebpf:"trace_kill"`
+	Events      *ebpf.Map     `ebpf:"events"`
 }
 
 type rawEvent struct {
@@ -32,12 +33,13 @@ type rawEvent struct {
 }
 
 type Auditor struct {
-	objects objects
-	link    link.Link
-	reader  *ringbuf.Reader
-	mu      sync.Mutex
-	pending map[uint32][]chan model.KillEvent
-	once    sync.Once
+	objects    objects
+	link       link.Link
+	signalLink link.Link
+	reader     *ringbuf.Reader
+	mu         sync.Mutex
+	pending    map[uint32][]chan model.KillEvent
+	once       sync.Once
 }
 
 func Open(objectPath string) (*Auditor, error) {
@@ -57,21 +59,44 @@ func Open(objectPath string) (*Auditor, error) {
 		auditor.closeObjects()
 		return nil, fmt.Errorf("attach sys_enter_kill: %w", err)
 	}
+	auditor.signalLink, err = link.AttachRawTracepoint(link.RawTracepointOptions{Name: "signal_generate", Program: auditor.objects.TraceSignal})
+	if err != nil {
+		_ = auditor.link.Close()
+		auditor.closeObjects()
+		return nil, fmt.Errorf("attach signal_generate: %w", err)
+	}
 	auditor.reader, err = ringbuf.NewReader(auditor.objects.Events)
 	if err != nil {
 		_ = auditor.link.Close()
 		auditor.closeObjects()
+		_ = auditor.signalLink.Close()
 		return nil, fmt.Errorf("open eBPF ring buffer: %w", err)
 	}
 	return auditor, nil
 }
 
-func (a *Auditor) Expect(targetPID uint32) <-chan model.KillEvent {
+func (a *Auditor) Expect(targetPID uint32) (<-chan model.KillEvent, func()) {
 	channel := make(chan model.KillEvent, 2)
 	a.mu.Lock()
 	a.pending[targetPID] = append(a.pending[targetPID], channel)
 	a.mu.Unlock()
-	return channel
+	return channel, func() {
+		a.mu.Lock()
+		defer a.mu.Unlock()
+		channels := a.pending[targetPID]
+		for i, candidate := range channels {
+			if candidate == channel {
+				channels = append(channels[:i], channels[i+1:]...)
+				if len(channels) == 0 {
+					delete(a.pending, targetPID)
+				} else {
+					a.pending[targetPID] = channels
+				}
+				close(channel)
+				break
+			}
+		}
+	}
 }
 
 func (a *Auditor) Start(ctx context.Context, observe func(model.KillEvent)) {
@@ -98,15 +123,23 @@ func (a *Auditor) Start(ctx context.Context, observe func(model.KillEvent)) {
 				Command:     strings.TrimRight(string(raw.Command[:]), "\x00"),
 				ObservedAt:  time.Now().UTC(),
 			}
+			event.Origin = "sys_enter_kill"
+			if raw.Padding == 1 {
+				event.Origin = "signal_generate"
+			}
+			// Deliver confirmations before persistence, which may block.
+			a.dispatch(event)
 			if observe != nil {
 				observe(event)
 			}
-			a.dispatch(event)
 		}
 	}()
 }
 
 func (a *Auditor) dispatch(event model.KillEvent) {
+	if event.Origin != "signal_generate" || (event.Signal != 9 && event.Signal != 15) {
+		return
+	}
 	a.mu.Lock()
 	channels := a.pending[event.TargetPID]
 	delete(a.pending, event.TargetPID)
@@ -131,12 +164,26 @@ func (a *Auditor) Close() error {
 				result = err
 			}
 		}
+		if a.signalLink != nil {
+			_ = a.signalLink.Close()
+		}
+		a.mu.Lock()
+		for pid, channels := range a.pending {
+			for _, channel := range channels {
+				close(channel)
+			}
+			delete(a.pending, pid)
+		}
+		a.mu.Unlock()
 		a.closeObjects()
 	})
 	return result
 }
 
 func (a *Auditor) closeObjects() {
+	if a.objects.TraceSignal != nil {
+		_ = a.objects.TraceSignal.Close()
+	}
 	if a.objects.TraceKill != nil {
 		_ = a.objects.TraceKill.Close()
 	}

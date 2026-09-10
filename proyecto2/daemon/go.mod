@@ -1,6 +1,6 @@
 module proyecto2-so1-201801391
 
-go 1.18
+go 1.20
 
 require (
 	github.com/cilium/ebpf v0.12.3

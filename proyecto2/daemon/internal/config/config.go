@@ -103,5 +103,8 @@ func durationEnv(key string, fallback time.Duration) (time.Duration, error) {
 	if err != nil {
 		return 0, fmt.Errorf("parse %s: %w", key, err)
 	}
+	if parsed <= 0 {
+		return 0, fmt.Errorf("%s must be positive", key)
+	}
 	return parsed, nil
 }

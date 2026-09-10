@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"proyecto2-so1-201801391/internal/model"
 )
@@ -71,7 +72,34 @@ func (m *Manager) Stop(ctx context.Context, container model.Container) error {
 }
 
 func (m *Manager) Remove(ctx context.Context, container model.Container) error {
-	return m.run(ctx, "docker", "rm", "-f", container.ID)
+	if container.ID == "" {
+		return fmt.Errorf("cannot remove container without ID")
+	}
+	err := m.run(ctx, "docker", "rm", "-f", container.ID)
+	if err == nil {
+		return nil
+	}
+	// --rm containers can disappear concurrently with docker stop.
+	// Verify absence through a successful Docker query; never hide daemon errors.
+	waitCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	for {
+		output, queryErr := m.output(waitCtx, "docker", "ps", "-a", "--no-trunc", "--filter", "id="+container.ID, "--format", "{{.ID}}")
+		if queryErr != nil {
+			return fmt.Errorf("verify container removal: %w", queryErr)
+		}
+		if len(strings.Fields(string(output))) == 0 {
+			return nil
+		}
+		if !strings.Contains(err.Error(), "removal of container") || !strings.Contains(err.Error(), "already in progress") {
+			return err
+		}
+		select {
+		case <-waitCtx.Done():
+			return fmt.Errorf("wait for container removal: %w", waitCtx.Err())
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
 }
 
 func (m *Manager) Correlate(snapshot model.Snapshot, containers []model.Container) []model.ContainerMetric {

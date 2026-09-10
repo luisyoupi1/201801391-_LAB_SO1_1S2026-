@@ -9,9 +9,13 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y \
-  build-essential clang llvm libbpf-dev linux-headers-"$(uname -r)" \
+  build-essential gcc-12 clang llvm libbpf-dev linux-headers-"$(uname -r)" \
   linux-tools-common linux-tools-generic linux-tools-"$(uname -r)" \
-  golang-go docker.io cron curl jq python3 rsync ca-certificates
+  golang-1.24-go cron curl jq python3 rsync ca-certificates
+
+if ! command -v docker >/dev/null 2>&1; then
+  apt-get install -y docker.io
+fi
 
 if ! docker compose version >/dev/null 2>&1; then
   if ! apt-get install -y docker-compose-plugin; then
@@ -30,7 +34,7 @@ if [ ! -r /sys/kernel/btf/vmlinux ]; then
 fi
 
 echo "Dependencias instaladas. Versiones:"
-go version
+/usr/lib/go-1.24/bin/go version
 clang --version | head -n 1
 docker --version
 
