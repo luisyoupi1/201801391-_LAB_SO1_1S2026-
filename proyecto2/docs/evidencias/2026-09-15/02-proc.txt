@@ -1,0 +1,42 @@
+$ cat /proc/continfo_pr2_so1_201801391 | jq '{carnet,memory,cantidad_procesos:(.processes|length),muestra:.processes[0:3]}'
+
+{
+  "carnet": "201801391",
+  "memory": {
+    "total_kb": 7894424,
+    "free_kb": 134480,
+    "used_kb": 7759944
+  },
+  "cantidad_procesos": 352,
+  "muestra": [
+    {
+      "pid": 1,
+      "name": "systemd",
+      "cmdline": "/sbin/init splash",
+      "vsz_kb": 169512,
+      "rss_kb": 11280,
+      "memory_percent": 0.14,
+      "cpu_percent": 0.32
+    },
+    {
+      "pid": 2,
+      "name": "kthreadd",
+      "cmdline": "kthreadd",
+      "vsz_kb": 0,
+      "rss_kb": 0,
+      "memory_percent": 0,
+      "cpu_percent": 0
+    },
+    {
+      "pid": 3,
+      "name": "pool_workqueue_",
+      "cmdline": "pool_workqueue_",
+      "vsz_kb": 0,
+      "rss_kb": 0,
+      "memory_percent": 0,
+      "cpu_percent": 0
+    }
+  ]
+}
+
+Código de salida: 0

@@ -1,0 +1,37 @@
+$ docker exec so1-valkey-201801391 valkey-cli --raw ZREVRANGE so1:201801391:series:deletions 0 0 | jq .
+
+{
+  "container": {
+    "container": {
+      "id": "9605c29d98d5951f994e12f199a3bd16bd19ddcab5048f6580818a394bbaba6d",
+      "name": "so1-201801391-high-1789482421-4164",
+      "pid": 3143818,
+      "running": true,
+      "labels": {
+        "com.docker.compose.project": "so1-proyecto2-201801391",
+        "com.docker.compose.service": "workload-cpu",
+        "com.docker.compose.version": "2.40.3",
+        "so1.profile": "high",
+        "so1.project": "201801391"
+      },
+      "profile": "high"
+    },
+    "vsz_kb": 3264,
+    "rss_kb": 1280,
+    "memory_percent": 0,
+    "cpu_percent": 17.65,
+    "score": 9.478309394428937
+  },
+  "event": {
+    "origin": "signal_generate",
+    "source_pid": 3223322,
+    "target_pid": 3143818,
+    "signal": 15,
+    "timestamp_ns": 50411333219541,
+    "command": "runc",
+    "observed_at": "2026-09-15T14:27:17.416895218Z"
+  },
+  "deleted_at": "2026-09-15T14:27:28.175983161Z"
+}
+
+Código de salida: 0

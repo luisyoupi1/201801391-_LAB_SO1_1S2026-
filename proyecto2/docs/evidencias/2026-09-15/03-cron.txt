@@ -1,0 +1,19 @@
+$ cat /etc/cron.d/so1-proyecto2-201801391; tail -n 10 /var/log/so1-proyecto2-201801391-cron.log
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CARNET=201801391
+PROJECT_ROOT=/opt/so1-proyecto2-201801391
+* * * * * root /bin/bash /opt/so1-proyecto2-201801391/scripts/generate_containers.sh >> /var/log/so1-proyecto2-201801391-cron.log 2>&1
+creado so1-201801391-high-1789482361-25236 (so1-201801391-memory:latest)
+creado so1-201801391-high-1789482361-12656 (so1-201801391-cpu:latest)
+creado so1-201801391-low-1789482361-19656 (so1-201801391-low:latest)
+creado so1-201801391-high-1789482362-22311 (so1-201801391-cpu:latest)
+creado so1-201801391-low-1789482362-17146 (so1-201801391-low:latest)
+creado so1-201801391-high-1789482421-4164 (so1-201801391-cpu:latest)
+creado so1-201801391-intruder-1789482421-1048 (so1-201801391-intruder:latest)
+creado so1-201801391-high-1789482422-20096 (so1-201801391-memory:latest)
+creado so1-201801391-high-1789482422-1708 (so1-201801391-cpu:latest)
+creado so1-201801391-high-1789482422-9491 (so1-201801391-cpu:latest)
+
+Código de salida: 0

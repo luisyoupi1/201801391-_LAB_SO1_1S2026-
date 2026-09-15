@@ -1,0 +1,90 @@
+[
+  {
+    "name": "01-servicio",
+    "title": "Servicio Go y módulo cargado",
+    "command": "systemctl status so1-telemetryd --no-pager; lsmod | grep \"^continfo\"; uname -r",
+    "output": "● so1-telemetryd.service - SO1 Proyecto 2 - Telemetria de contenedores 201801391\n     Loaded: loaded (/etc/systemd/system/so1-telemetryd.service; enabled; vendor preset: enabled)\n     Active: active (running) since Mon 2026-09-14 21:16:27 CST; 11h ago\n   Main PID: 134564 (so1-telemetryd-)\n      Tasks: 22 (limit: 9091)\n     Memory: 82.6M\n        CPU: 12min 52.620s\n     CGroup: /system.slice/so1-telemetryd.service\n             ├─ 134564 /usr/local/bin/so1-telemetryd-201801391\n             └─3273829 docker stop --time 10 9760d4fce5513a89e0f0bbcc4bdf3c64e35cf74b74f34420f0f1596e16b84aec\n\nSep 15 08:25:37 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:25:37 deteniendo so1-201801391-low-1789482302-4116 perfil=low score=2.88\nSep 15 08:26:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:06 deteniendo so1-201801391-high-1789482361-25236 perfil=high score=30.31\nSep 15 08:26:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:06 deteniendo so1-201801391-high-1789482362-22311 perfil=high score=9.49\nSep 15 08:26:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:17 deteniendo so1-201801391-high-1789482361-12656 perfil=high score=9.42\nSep 15 08:26:27 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:27 deteniendo so1-201801391-low-1789482362-17146 perfil=low score=2.05\nSep 15 08:26:38 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:38 deteniendo so1-201801391-low-1789482361-19656 perfil=low score=2.01\nSep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-20096 perfil=high score=30.50\nSep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-1708 perfil=high score=9.63\nSep 15 08:27:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:17 deteniendo so1-201801391-high-1789482421-4164 perfil=high score=9.48\nSep 15 08:27:28 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:28 deteniendo so1-201801391-high-1789482422-9491 perfil=high score=9.44\ncontinfo               16384  0\n6.8.0-138-generic\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:29.537975-06:00"
+  },
+  {
+    "name": "02-proc",
+    "title": "Interfaz /proc: PID, memoria y CPU",
+    "command": "cat /proc/continfo_pr2_so1_201801391 | jq '{carnet,memory,cantidad_procesos:(.processes|length),muestra:.processes[0:3]}'",
+    "output": "{\n  \"carnet\": \"201801391\",\n  \"memory\": {\n    \"total_kb\": 7894424,\n    \"free_kb\": 134480,\n    \"used_kb\": 7759944\n  },\n  \"cantidad_procesos\": 352,\n  \"muestra\": [\n    {\n      \"pid\": 1,\n      \"name\": \"systemd\",\n      \"cmdline\": \"/sbin/init splash\",\n      \"vsz_kb\": 169512,\n      \"rss_kb\": 11280,\n      \"memory_percent\": 0.14,\n      \"cpu_percent\": 0.32\n    },\n    {\n      \"pid\": 2,\n      \"name\": \"kthreadd\",\n      \"cmdline\": \"kthreadd\",\n      \"vsz_kb\": 0,\n      \"rss_kb\": 0,\n      \"memory_percent\": 0,\n      \"cpu_percent\": 0\n    },\n    {\n      \"pid\": 3,\n      \"name\": \"pool_workqueue_\",\n      \"cmdline\": \"pool_workqueue_\",\n      \"vsz_kb\": 0,\n      \"rss_kb\": 0,\n      \"memory_percent\": 0,\n      \"cpu_percent\": 0\n    }\n  ]\n}\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:29.601616-06:00"
+  },
+  {
+    "name": "03-cron",
+    "title": "Cron instalado: una ejecución cada minuto",
+    "command": "cat /etc/cron.d/so1-proyecto2-201801391; tail -n 10 /var/log/so1-proyecto2-201801391-cron.log",
+    "output": "SHELL=/bin/bash\nPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nCARNET=201801391\nPROJECT_ROOT=/opt/so1-proyecto2-201801391\n* * * * * root /bin/bash /opt/so1-proyecto2-201801391/scripts/generate_containers.sh >> /var/log/so1-proyecto2-201801391-cron.log 2>&1\ncreado so1-201801391-high-1789482361-25236 (so1-201801391-memory:latest)\ncreado so1-201801391-high-1789482361-12656 (so1-201801391-cpu:latest)\ncreado so1-201801391-low-1789482361-19656 (so1-201801391-low:latest)\ncreado so1-201801391-high-1789482362-22311 (so1-201801391-cpu:latest)\ncreado so1-201801391-low-1789482362-17146 (so1-201801391-low:latest)\ncreado so1-201801391-high-1789482421-4164 (so1-201801391-cpu:latest)\ncreado so1-201801391-intruder-1789482421-1048 (so1-201801391-intruder:latest)\ncreado so1-201801391-high-1789482422-20096 (so1-201801391-memory:latest)\ncreado so1-201801391-high-1789482422-1708 (so1-201801391-cpu:latest)\ncreado so1-201801391-high-1789482422-9491 (so1-201801391-cpu:latest)\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:29.613206-06:00"
+  },
+  {
+    "name": "04-generador",
+    "title": "Prueba real: cinco contenedores por ejecución",
+    "command": "bash /opt/so1-proyecto2-201801391/scripts/generate_containers.sh | tee /tmp/so1-evidencias-20260915/generador-salida.txt; printf \"Contenedores creados: \"; grep -c \"^creado \" /tmp/so1-evidencias-20260915/generador-salida.txt",
+    "output": "creado so1-201801391-low-1789482449-8028 (so1-201801391-low:latest)\ncreado so1-201801391-high-1789482450-31098 (so1-201801391-cpu:latest)\ncreado so1-201801391-intruder-1789482450-26434 (so1-201801391-intruder:latest)\ncreado so1-201801391-high-1789482450-13374 (so1-201801391-cpu:latest)\ncreado so1-201801391-high-1789482451-9351 (so1-201801391-memory:latest)\nContenedores creados: 5\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:32.051617-06:00"
+  },
+  {
+    "name": "05-valkey",
+    "title": "Persistencia en Valkey",
+    "command": "docker exec so1-valkey-201801391 valkey-cli PING; docker exec so1-valkey-201801391 valkey-cli HGETALL so1:201801391:system:current; docker exec so1-valkey-201801391 valkey-cli LLEN so1:201801391:ebpf:events",
+    "output": "PONG\nram_total_kb\n7894424\nram_free_kb\n220180\nram_used_kb\n7674244\ntimestamp_ms\n1789482426021\n727440\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:32.599489-06:00"
+  },
+  {
+    "name": "06-ebpf",
+    "title": "Prueba controlada: SIGTERM capturado por eBPF",
+    "command": "sleep 300 &\nSO1_TEST_PID=$!\necho \"PID de prueba: $SO1_TEST_PID\"\nkill -TERM \"$SO1_TEST_PID\"\nsleep 2\ndocker exec so1-valkey-201801391 valkey-cli --raw LRANGE so1:201801391:ebpf:events 0 199 | jq --argjson pid \"$SO1_TEST_PID\" 'select(.target_pid == $pid)' ",
+    "output": "PID de prueba: 3287288\n{\n  \"origin\": \"signal_generate\",\n  \"source_pid\": 3287276,\n  \"target_pid\": 3287288,\n  \"signal\": 15,\n  \"timestamp_ns\": 50426523149712,\n  \"command\": \"bash\",\n  \"observed_at\": \"2026-09-15T14:27:32.608672365Z\"\n}\n{\n  \"origin\": \"sys_enter_kill\",\n  \"source_pid\": 3287276,\n  \"target_pid\": 3287288,\n  \"signal\": 15,\n  \"timestamp_ns\": 50426523125543,\n  \"command\": \"bash\",\n  \"observed_at\": \"2026-09-15T14:27:32.606383978Z\"\n}\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:34.782689-06:00"
+  },
+  {
+    "name": "07-eliminaciones",
+    "title": "Eliminaciones confirmadas y registradas",
+    "command": "docker exec so1-valkey-201801391 valkey-cli --raw ZREVRANGE so1:201801391:series:deletions 0 0 | jq .",
+    "output": "{\n  \"container\": {\n    \"container\": {\n      \"id\": \"9605c29d98d5951f994e12f199a3bd16bd19ddcab5048f6580818a394bbaba6d\",\n      \"name\": \"so1-201801391-high-1789482421-4164\",\n      \"pid\": 3143818,\n      \"running\": true,\n      \"labels\": {\n        \"com.docker.compose.project\": \"so1-proyecto2-201801391\",\n        \"com.docker.compose.service\": \"workload-cpu\",\n        \"com.docker.compose.version\": \"2.40.3\",\n        \"so1.profile\": \"high\",\n        \"so1.project\": \"201801391\"\n      },\n      \"profile\": \"high\"\n    },\n    \"vsz_kb\": 3264,\n    \"rss_kb\": 1280,\n    \"memory_percent\": 0,\n    \"cpu_percent\": 17.65,\n    \"score\": 9.478309394428937\n  },\n  \"event\": {\n    \"origin\": \"signal_generate\",\n    \"source_pid\": 3223322,\n    \"target_pid\": 3143818,\n    \"signal\": 15,\n    \"timestamp_ns\": 50411333219541,\n    \"command\": \"runc\",\n    \"observed_at\": \"2026-09-15T14:27:17.416895218Z\"\n  },\n  \"deleted_at\": \"2026-09-15T14:27:28.175983161Z\"\n}\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:34.948630-06:00"
+  },
+  {
+    "name": "08-metricas",
+    "title": "Métricas del daemon",
+    "command": "curl -fsS http://localhost:9105/metrics | grep -E \"^so1_(ram_|containers_deleted_total|ebpf_kill_events_total|last_success_timestamp_seconds)\"; journalctl -u so1-telemetryd -n 6 --no-pager",
+    "output": "so1_ram_total_bytes 8083890176\nso1_ram_free_bytes 225464320\nso1_ram_used_bytes 7858425856\nso1_containers_deleted_total 3093\nso1_ebpf_kill_events_total 155739\nso1_last_success_timestamp_seconds 1789482426\nSep 15 08:26:27 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:27 deteniendo so1-201801391-low-1789482362-17146 perfil=low score=2.05\nSep 15 08:26:38 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:38 deteniendo so1-201801391-low-1789482361-19656 perfil=low score=2.01\nSep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-20096 perfil=high score=30.50\nSep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-1708 perfil=high score=9.63\nSep 15 08:27:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:17 deteniendo so1-201801391-high-1789482421-4164 perfil=high score=9.48\nSep 15 08:27:28 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:28 deteniendo so1-201801391-high-1789482422-9491 perfil=high score=9.44\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:27:35.097061-06:00"
+  },
+  {
+    "name": "09-compilacion",
+    "title": "Compilación real: kernel, eBPF y daemon Go",
+    "command": "make all",
+    "output": "make -C /lib/modules/$(uname -r)/build M=/tmp/so1-evidencias-20260915/compilacion/kernel CARNET=201801391 modules\nmake[1]: Entering directory '/usr/src/linux-headers-6.8.0-138-generic'\nwarning: the compiler differs from the one used to build the kernel\n  The kernel was built by: x86_64-linux-gnu-gcc-12 (Ubuntu 12.3.0-1ubuntu1~22.04.3) 12.3.0\n  You are using:           gcc-12 (Ubuntu 12.3.0-1ubuntu1~22.04.3) 12.3.0\nmake[1]: Leaving directory '/usr/src/linux-headers-6.8.0-138-generic'\nclang -O2 -g -Wall -Werror -target bpf -D__TARGET_ARCH_x86 \\\n\t-I/tmp/so1-evidencias-20260915/compilacion/daemon/internal/ebpf -c /tmp/so1-evidencias-20260915/compilacion/daemon/internal/ebpf/kill_monitor.bpf.c \\\n\t-o /tmp/so1-evidencias-20260915/compilacion/daemon/internal/ebpf/kill_monitor.bpf.o\ncd daemon && CGO_ENABLED=0 /usr/lib/go-1.24/bin/go build -buildvcs=false -trimpath -ldflags \"-s -w\" -o /tmp/so1-evidencias-20260915/compilacion/bin/telemetryd ./cmd/telemetryd\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:29:55.297471-06:00"
+  },
+  {
+    "name": "10-pruebas",
+    "title": "Pruebas Go, detector de carreras y validación",
+    "command": "make test",
+    "output": "cd daemon && /usr/lib/go-1.24/bin/go test -race ./...\n?   \tproyecto2-so1-201801391/cmd/telemetryd\t[no test files]\nok  \tproyecto2-so1-201801391/internal/config\t1.026s\nok  \tproyecto2-so1-201801391/internal/decision\t1.024s\nok  \tproyecto2-so1-201801391/internal/dockerctl\t1.151s\nok  \tproyecto2-so1-201801391/internal/ebpf\t1.031s\nok  \tproyecto2-so1-201801391/internal/metrics\t1.029s\n?   \tproyecto2-so1-201801391/internal/model\t[no test files]\nok  \tproyecto2-so1-201801391/internal/procfs\t1.026s\n?   \tproyecto2-so1-201801391/internal/valkeystore\t[no test files]\ncd daemon && /usr/lib/go-1.24/bin/go vet ./...\npython3 scripts/validate_project.py\nValidación estructural correcta para carnet 201801391\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:31:11.664571-06:00"
+  },
+  {
+    "name": "14-carga-descarga",
+    "title": "Carga y descarga del módulo: /proc y servicio",
+    "command": "sudo bash /tmp/so1-evidencias-20260915/probar-modulo.sh",
+    "output": "2026-09-15T08:31:07-06:00\n+ systemctl stop so1-telemetryd\n+ bash scripts/unload_module.sh\n+ test '!' -e /proc/continfo_pr2_so1_201801391\n+ echo 'OK: módulo descargado y /proc eliminado'\nOK: módulo descargado y /proc eliminado\n+ bash scripts/load_module.sh\n[50641.520465] r8169 0000:01:00.0:    [ 0] RxErr                  (First)\n[50641.530239] pcieport 0000:00:1d.0: AER: Multiple Correctable error message received from 0000:01:00.0\n[50641.530270] r8169 0000:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)\n[50641.530274] r8169 0000:01:00.0:   device [10ec:8136] error status/mask=00000001/00006000\n[50641.530280] r8169 0000:01:00.0:    [ 0] RxErr                  (First)\n+ test -r /proc/continfo_pr2_so1_201801391\n+ echo 'OK: módulo cargado y /proc legible'\nOK: módulo cargado y /proc legible\n+ systemctl start so1-telemetryd\n+ systemctl is-active so1-telemetryd\nactive\n+ systemctl start so1-telemetryd\n",
+    "exit_code": 0,
+    "time": "2026-09-15T08:31:07-06:00"
+  }
+]

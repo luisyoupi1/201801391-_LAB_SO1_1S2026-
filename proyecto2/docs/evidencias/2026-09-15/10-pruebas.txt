@@ -1,0 +1,17 @@
+$ make test
+
+cd daemon && /usr/lib/go-1.24/bin/go test -race ./...
+?   	proyecto2-so1-201801391/cmd/telemetryd	[no test files]
+ok  	proyecto2-so1-201801391/internal/config	1.026s
+ok  	proyecto2-so1-201801391/internal/decision	1.024s
+ok  	proyecto2-so1-201801391/internal/dockerctl	1.151s
+ok  	proyecto2-so1-201801391/internal/ebpf	1.031s
+ok  	proyecto2-so1-201801391/internal/metrics	1.029s
+?   	proyecto2-so1-201801391/internal/model	[no test files]
+ok  	proyecto2-so1-201801391/internal/procfs	1.026s
+?   	proyecto2-so1-201801391/internal/valkeystore	[no test files]
+cd daemon && /usr/lib/go-1.24/bin/go vet ./...
+python3 scripts/validate_project.py
+Validación estructural correcta para carnet 201801391
+
+Código de salida: 0

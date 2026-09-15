@@ -1,0 +1,19 @@
+2026-09-15T08:31:07-06:00
++ systemctl stop so1-telemetryd
++ bash scripts/unload_module.sh
++ test '!' -e /proc/continfo_pr2_so1_201801391
++ echo 'OK: módulo descargado y /proc eliminado'
+OK: módulo descargado y /proc eliminado
++ bash scripts/load_module.sh
+[50641.520465] r8169 0000:01:00.0:    [ 0] RxErr                  (First)
+[50641.530239] pcieport 0000:00:1d.0: AER: Multiple Correctable error message received from 0000:01:00.0
+[50641.530270] r8169 0000:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+[50641.530274] r8169 0000:01:00.0:   device [10ec:8136] error status/mask=00000001/00006000
+[50641.530280] r8169 0000:01:00.0:    [ 0] RxErr                  (First)
++ test -r /proc/continfo_pr2_so1_201801391
++ echo 'OK: módulo cargado y /proc legible'
+OK: módulo cargado y /proc legible
++ systemctl start so1-telemetryd
++ systemctl is-active so1-telemetryd
+active
++ systemctl start so1-telemetryd

@@ -1,0 +1,10 @@
+$ bash /opt/so1-proyecto2-201801391/scripts/generate_containers.sh | tee /tmp/so1-evidencias-20260915/generador-salida.txt; printf "Contenedores creados: "; grep -c "^creado " /tmp/so1-evidencias-20260915/generador-salida.txt
+
+creado so1-201801391-low-1789482449-8028 (so1-201801391-low:latest)
+creado so1-201801391-high-1789482450-31098 (so1-201801391-cpu:latest)
+creado so1-201801391-intruder-1789482450-26434 (so1-201801391-intruder:latest)
+creado so1-201801391-high-1789482450-13374 (so1-201801391-cpu:latest)
+creado so1-201801391-high-1789482451-9351 (so1-201801391-memory:latest)
+Contenedores creados: 5
+
+Código de salida: 0

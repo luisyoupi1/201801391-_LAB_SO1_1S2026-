@@ -1,0 +1,28 @@
+$ sleep 300 &
+SO1_TEST_PID=$!
+echo "PID de prueba: $SO1_TEST_PID"
+kill -TERM "$SO1_TEST_PID"
+sleep 2
+docker exec so1-valkey-201801391 valkey-cli --raw LRANGE so1:201801391:ebpf:events 0 199 | jq --argjson pid "$SO1_TEST_PID" 'select(.target_pid == $pid)' 
+
+PID de prueba: 3287288
+{
+  "origin": "signal_generate",
+  "source_pid": 3287276,
+  "target_pid": 3287288,
+  "signal": 15,
+  "timestamp_ns": 50426523149712,
+  "command": "bash",
+  "observed_at": "2026-09-15T14:27:32.608672365Z"
+}
+{
+  "origin": "sys_enter_kill",
+  "source_pid": 3287276,
+  "target_pid": 3287288,
+  "signal": 15,
+  "timestamp_ns": 50426523125543,
+  "command": "bash",
+  "observed_at": "2026-09-15T14:27:32.606383978Z"
+}
+
+Código de salida: 0

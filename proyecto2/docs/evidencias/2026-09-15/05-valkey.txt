@@ -1,0 +1,14 @@
+$ docker exec so1-valkey-201801391 valkey-cli PING; docker exec so1-valkey-201801391 valkey-cli HGETALL so1:201801391:system:current; docker exec so1-valkey-201801391 valkey-cli LLEN so1:201801391:ebpf:events
+
+PONG
+ram_total_kb
+7894424
+ram_free_kb
+220180
+ram_used_kb
+7674244
+timestamp_ms
+1789482426021
+727440
+
+Código de salida: 0

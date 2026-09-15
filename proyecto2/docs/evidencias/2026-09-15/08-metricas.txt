@@ -1,0 +1,16 @@
+$ curl -fsS http://localhost:9105/metrics | grep -E "^so1_(ram_|containers_deleted_total|ebpf_kill_events_total|last_success_timestamp_seconds)"; journalctl -u so1-telemetryd -n 6 --no-pager
+
+so1_ram_total_bytes 8083890176
+so1_ram_free_bytes 225464320
+so1_ram_used_bytes 7858425856
+so1_containers_deleted_total 3093
+so1_ebpf_kill_events_total 155739
+so1_last_success_timestamp_seconds 1789482426
+Sep 15 08:26:27 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:27 deteniendo so1-201801391-low-1789482362-17146 perfil=low score=2.05
+Sep 15 08:26:38 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:38 deteniendo so1-201801391-low-1789482361-19656 perfil=low score=2.01
+Sep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-20096 perfil=high score=30.50
+Sep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-1708 perfil=high score=9.63
+Sep 15 08:27:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:17 deteniendo so1-201801391-high-1789482421-4164 perfil=high score=9.48
+Sep 15 08:27:28 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:28 deteniendo so1-201801391-high-1789482422-9491 perfil=high score=9.44
+
+Código de salida: 0

@@ -1,0 +1,27 @@
+$ systemctl status so1-telemetryd --no-pager; lsmod | grep "^continfo"; uname -r
+
+● so1-telemetryd.service - SO1 Proyecto 2 - Telemetria de contenedores 201801391
+     Loaded: loaded (/etc/systemd/system/so1-telemetryd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2026-09-14 21:16:27 CST; 11h ago
+   Main PID: 134564 (so1-telemetryd-)
+      Tasks: 22 (limit: 9091)
+     Memory: 82.6M
+        CPU: 12min 52.620s
+     CGroup: /system.slice/so1-telemetryd.service
+             ├─ 134564 /usr/local/bin/so1-telemetryd-201801391
+             └─3273829 docker stop --time 10 9760d4fce5513a89e0f0bbcc4bdf3c64e35cf74b74f34420f0f1596e16b84aec
+
+Sep 15 08:25:37 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:25:37 deteniendo so1-201801391-low-1789482302-4116 perfil=low score=2.88
+Sep 15 08:26:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:06 deteniendo so1-201801391-high-1789482361-25236 perfil=high score=30.31
+Sep 15 08:26:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:06 deteniendo so1-201801391-high-1789482362-22311 perfil=high score=9.49
+Sep 15 08:26:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:17 deteniendo so1-201801391-high-1789482361-12656 perfil=high score=9.42
+Sep 15 08:26:27 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:27 deteniendo so1-201801391-low-1789482362-17146 perfil=low score=2.05
+Sep 15 08:26:38 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:26:38 deteniendo so1-201801391-low-1789482361-19656 perfil=low score=2.01
+Sep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-20096 perfil=high score=30.50
+Sep 15 08:27:06 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:06 deteniendo so1-201801391-high-1789482422-1708 perfil=high score=9.63
+Sep 15 08:27:17 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:17 deteniendo so1-201801391-high-1789482421-4164 perfil=high score=9.48
+Sep 15 08:27:28 luisyoupi-Inspiron-3593 so1-telemetryd-201801391[134564]: 2026/09/15 08:27:28 deteniendo so1-201801391-high-1789482422-9491 perfil=high score=9.44
+continfo               16384  0
+6.8.0-138-generic
+
+Código de salida: 0
