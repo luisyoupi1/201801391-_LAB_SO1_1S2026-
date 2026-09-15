@@ -7,7 +7,7 @@
 - Curso: Sistemas Operativos 1
 - Interfaz `/proc`: `/proc/continfo_pr2_so1_201801391`
 - Intervalo del daemon: 30 segundos, configurable entre 20 y 60 segundos
-- Cron de carga: cada 2 minutos
+- Cron de carga: cada minuto
 
 ## 2. Arquitectura
 

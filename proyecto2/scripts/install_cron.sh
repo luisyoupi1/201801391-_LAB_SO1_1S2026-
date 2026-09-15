@@ -14,7 +14,7 @@ SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CARNET=${CARNET}
 PROJECT_ROOT=${PROJECT_ROOT}
-*/2 * * * * root /bin/bash ${PROJECT_ROOT}/scripts/generate_containers.sh >> ${LOG_FILE} 2>&1
+* * * * * root /bin/bash ${PROJECT_ROOT}/scripts/generate_containers.sh >> ${LOG_FILE} 2>&1
 EOF
 chmod 0644 "$CRON_FILE"
 systemctl reload cron 2>/dev/null || systemctl restart cron

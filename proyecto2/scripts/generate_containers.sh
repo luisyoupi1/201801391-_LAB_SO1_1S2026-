@@ -65,5 +65,4 @@ profiles=(low high-memory high-cpu intruder)
 for _ in 1 2 3 4 5; do
   launch "${profiles[$((RANDOM % ${#profiles[@]}))]}"
 done
-ensure_baseline
 

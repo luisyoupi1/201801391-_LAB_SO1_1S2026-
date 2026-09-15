@@ -10,7 +10,7 @@ Implementación integral de telemetría y gestión de contenedores con:
 - sonda eBPF sobre `syscalls:sys_enter_kill` con eventos por ring buffer;
 - daemon en Go que correlaciona procesos y contenedores, mantiene mínimos de carga y elimina excedentes;
 - persistencia de métricas y eventos en Valkey;
-- cron cada dos minutos para generar cinco contenedores aleatorios;
+- cron cada minuto para generar cinco contenedores aleatorios;
 - Grafana y Prometheus provisionados automáticamente;
 - imágenes personalizadas de memoria, CPU, bajo consumo e intruso.
 
@@ -102,7 +102,7 @@ curl -fsS http://localhost:9105/metrics | grep '^so1_'
 ```
 
 Se espera un servicio `active` y `enabled`, JSON válido en `/proc`, al menos tres
-contenedores `low` y dos `high`, cron cada dos minutos, métricas `so1_*` y target de
+contenedores `low` y dos `high`, cron cada minuto, métricas `so1_*` y target de
 Prometheus en estado `UP`.
 
 Si Docker responde `permission denied`, vuelva a iniciar sesión para aplicar el grupo

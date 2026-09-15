@@ -85,7 +85,7 @@ vuelve a cargar el módulo y confirma que el servicio regresa a `active`.
 
 ![Cron y generación aleatoria de contenedores](evidencias/capturas/12-cron-y-generador.png)
 
-El cron programa una ejecución cada dos minutos. La invocación manual demuestra la
+La captura corresponde a la configuración anterior, cada dos minutos. Según la aclaración del enunciado, el cron ahora programa una ejecución cada minuto y crea exactamente cinco contenedores por ejecución. La invocación manual demuestra la
 creación de cinco contenedores aleatorios y la restauración de la línea base.
 
 ### 4.2 Observación de `kill(2)`
