@@ -1,0 +1,5 @@
+image: valkey/valkey:8.1-alpine
+storage: 5Gi
+resources:
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: 300m, memory: 256Mi}

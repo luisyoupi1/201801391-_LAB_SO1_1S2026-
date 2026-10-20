@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: dapr-consumer, namespace: so1-proyecto3}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: dapr-consumer}}
+  template:
+    metadata:
+      labels: {app: dapr-consumer}
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: dapr-consumer
+        dapr.io/app-port: "8084"
+    spec:
+      containers:
+        - name: dapr-consumer
+          image: zot.example.com:5000/so1/dapr-consumer:v1
+          ports: [{name: http, containerPort: 8084}]
+          envFrom: [{configMapRef: {name: mum-config}}]
+          resources: {requests: {cpu: 25m, memory: 32Mi}, limits: {cpu: 200m, memory: 128Mi}}

@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rust-api
+  namespace: so1-proyecto3
+spec:
+  parentRefs: [{name: mum-gateway}]
+  rules:
+    - matches:
+        - path: {type: Exact, value: /grpc-201801391}
+        - path: {type: Exact, value: /dapr-201801391}
+        - path: {type: Exact, value: /health}
+      backendRefs:
+        - {name: rust-api, port: 8080}

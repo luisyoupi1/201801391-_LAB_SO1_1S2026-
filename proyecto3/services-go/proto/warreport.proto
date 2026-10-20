@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package wartweets.v1;
+option go_package = "github.com/luisyoupi1/so1-proyecto3/services-go/gen/wartweets/v1;wartweetsv1";
+
+enum Countries {
+  COUNTRIES_UNKNOWN = 0;
+  USA = 1;
+  RUS = 2;
+  CHN = 3;
+  ESP = 4;
+  GTM = 5;
+}
+
+message WarReportRequest {
+  string id = 1;
+  Countries country = 2;
+  int32 warplanes_in_air = 3;
+  int32 warships_in_water = 4;
+  string timestamp = 5;
+}
+
+message WarReportResponse {
+  string status = 1;
+  string id = 2;
+}
+
+service WarReportService {
+  rpc SendReport(WarReportRequest) returns (WarReportResponse);
+}

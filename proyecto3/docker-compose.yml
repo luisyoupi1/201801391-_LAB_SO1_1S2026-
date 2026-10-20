@@ -1,0 +1,199 @@
+name: so1-proyecto3-201801391
+
+services:
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    container_name: p3-rabbitmq-201801391
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-so1}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-so1-local-201801391}
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [mum]
+
+  valkey:
+    image: valkey/valkey:8.1-alpine
+    container_name: p3-valkey-201801391
+    command: ["valkey-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [mum]
+
+  go-api:
+    build:
+      context: ./services-go
+      args: { SERVICE: go-api }
+    image: localhost:5000/so1/go-api:local
+    container_name: p3-go-api-201801391
+    environment:
+      HTTP_ADDR: :8081
+      GRPC_CLIENT_URL: http://grpc-client:8082/forward
+    depends_on: [grpc-client]
+    networks: [mum]
+
+  grpc-client:
+    build:
+      context: ./services-go
+      args: { SERVICE: grpc-client }
+    image: localhost:5000/so1/grpc-client:local
+    container_name: p3-grpc-client-201801391
+    environment:
+      HTTP_ADDR: :8082
+      GRPC_SERVER_ADDR: grpc-server:50051
+    depends_on: [grpc-server]
+    networks: [mum]
+
+  grpc-server:
+    build:
+      context: ./services-go
+      args: { SERVICE: grpc-server }
+    image: localhost:5000/so1/grpc-server:local
+    container_name: p3-grpc-server-201801391
+    environment:
+      GRPC_ADDR: :50051
+      WRITER_URL: http://rabbit-writer:8083/publish
+    depends_on: [rabbit-writer]
+    networks: [mum]
+
+  rabbit-writer:
+    build:
+      context: ./services-go
+      args: { SERVICE: rabbit-writer }
+    image: localhost:5000/so1/rabbit-writer:local
+    container_name: p3-rabbit-writer-201801391
+    environment:
+      HTTP_ADDR: :8083
+      AMQP_URL: amqp://${RABBITMQ_USER:-so1}:${RABBITMQ_PASSWORD:-so1-local-201801391}@rabbitmq:5672/
+      RABBITMQ_QUEUE: war-reports
+    depends_on:
+      rabbitmq: { condition: service_healthy }
+    networks: [mum]
+
+  consumer:
+    build:
+      context: ./services-go
+      args: { SERVICE: consumer }
+    image: localhost:5000/so1/consumer:local
+    container_name: p3-consumer-201801391
+    environment:
+      AMQP_URL: amqp://${RABBITMQ_USER:-so1}:${RABBITMQ_PASSWORD:-so1-local-201801391}@rabbitmq:5672/
+      RABBITMQ_QUEUE: war-reports
+      VALKEY_ADDR: valkey:6379
+    depends_on:
+      rabbitmq: { condition: service_healthy }
+      valkey: { condition: service_healthy }
+    networks: [mum]
+
+  metrics-exporter:
+    build:
+      context: ./services-go
+      args: { SERVICE: metrics-exporter }
+    image: localhost:5000/so1/metrics-exporter:local
+    container_name: p3-metrics-201801391
+    environment:
+      HTTP_ADDR: :9106
+      VALKEY_ADDR: valkey:6379
+    ports:
+      - "127.0.0.1:9106:9106"
+    depends_on:
+      valkey: { condition: service_healthy }
+    networks: [mum]
+
+  rust-api:
+    build: ./api-rust
+    image: localhost:5000/so1/rust-api:local
+    container_name: p3-rust-api-201801391
+    environment:
+      HTTP_ADDR: 0.0.0.0:8080
+      GO_API_URL: http://go-api:8081/ingest
+      DAPR_HTTP_URL: http://127.0.0.1:3500
+      CARNET: ${CARNET:-201801391}
+    ports:
+      - "127.0.0.1:${RUST_API_PORT:-8080}:8080"
+    depends_on: [go-api]
+    networks: [mum]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: p3-prometheus-201801391
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=7d"]
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    depends_on: [metrics-exporter]
+    networks: [mum]
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    container_name: p3-grafana-201801391
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-so1-201801391}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on: [prometheus]
+    networks: [mum]
+
+  locust:
+    image: locustio/locust:2.41.5
+    container_name: p3-locust-201801391
+    profiles: [load]
+    command: ["-f", "/mnt/locust/locustfile.py", "--host", "http://rust-api:8080"]
+    environment:
+      COUNTRIES_FILE: /mnt/artifacts/countries.json
+    ports:
+      - "127.0.0.1:${LOCUST_PORT:-8089}:8089"
+    volumes:
+      - ./locust:/mnt/locust:ro
+      - ./runtime/oci:/mnt/artifacts:ro
+      - ./runtime/locust:/reports
+    depends_on: [rust-api]
+    networks: [mum]
+
+  zot:
+    image: ghcr.io/project-zot/zot-linux-amd64:v2.1.10
+    container_name: p3-zot-201801391
+    profiles: [registry]
+    command: ["serve", "/etc/zot/config.json"]
+    ports:
+      - "127.0.0.1:${ZOT_PORT:-5000}:5000"
+    volumes:
+      - ./zot/config.json:/etc/zot/config.json:ro
+      - ./certs:/etc/zot/certs:ro
+      - zot_data:/var/lib/zot
+    networks: [mum]
+
+networks:
+  mum:
+    name: so1-p3-mum-201801391
+
+volumes:
+  rabbitmq_data:
+  valkey_data:
+  prometheus_data:
+  grafana_data:
+  zot_data:

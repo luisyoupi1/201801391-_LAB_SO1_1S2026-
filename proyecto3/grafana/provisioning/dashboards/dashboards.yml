@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: MUM-N-K8s
+    orgId: 1
+    folder: Sistemas Operativos 1
+    type: file
+    disableDeletion: true
+    updateIntervalSeconds: 10
+    options:
+      path: /var/lib/grafana/dashboards

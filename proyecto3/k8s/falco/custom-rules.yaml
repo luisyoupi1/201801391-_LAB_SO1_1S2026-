@@ -1,0 +1,6 @@
+- rule: Read sensitive MUM file
+  desc: Detecta la lectura del archivo sensible usado como evidencia del Proyecto 3
+  condition: open_read and fd.name = /etc/mum/sensitive-201801391.txt
+  output: "MUM sensitive file read (user=%user.name command=%proc.cmdline file=%fd.name container=%container.name)"
+  priority: WARNING
+  tags: [filesystem, mum, 201801391]

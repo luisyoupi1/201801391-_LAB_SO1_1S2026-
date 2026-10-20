@@ -1,0 +1,6 @@
+apiVersion: v2
+name: valkeyinstance
+description: Valkey persistente administrado por el operador MUM
+type: application
+version: 0.1.0
+appVersion: "8.1"

@@ -1,0 +1,12 @@
+{
+  "artifact": "M.U.M.N.K8s country catalog",
+  "version": "1.0.0",
+  "assigned_country": "USA",
+  "countries": [
+    {"code":"USA","name":"United States"},
+    {"code":"RUS","name":"Russia"},
+    {"code":"CHN","name":"China"},
+    {"code":"ESP","name":"Spain"},
+    {"code":"GTM","name":"Guatemala"}
+  ]
+}

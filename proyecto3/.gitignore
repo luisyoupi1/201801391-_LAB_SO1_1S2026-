@@ -1,0 +1,10 @@
+.env
+certs/
+runtime/
+locust/report.html
+locust/results*.csv
+target/
+bin/
+*.log
+__pycache__/
+*.py[cod]

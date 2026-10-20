@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mum-config
+  namespace: so1-proyecto3
+data:
+  RABBITMQ_QUEUE: war-reports
+  VALKEY_ADDR: valkey:6379
+  GRPC_CLIENT_URL: http://grpc-client:8082/forward
+  GRPC_SERVER_ADDR: grpc-server:50051
+  WRITER_URL: http://rabbit-writer:8083/publish
+  GO_API_URL: http://go-api:8081/ingest
+  CARNET: "201801391"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mum-secrets
+  namespace: so1-proyecto3
+type: Opaque
+stringData:
+  RABBITMQ_USER: so1
+  RABBITMQ_PASSWORD: CAMBIAR_ANTES_DE_GKE
+  GRAFANA_ADMIN_USER: admin
+  GRAFANA_ADMIN_PASSWORD: CAMBIAR_ANTES_DE_GKE

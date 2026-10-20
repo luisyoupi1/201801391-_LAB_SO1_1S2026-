@@ -1,0 +1,11 @@
+---
+- group: so1.usac.edu.gt
+  version: v1alpha1
+  kind: ValkeyInstance
+  chart: helm-charts/valkeyinstance
+  reconcilePeriod: 30s
+- group: so1.usac.edu.gt
+  version: v1alpha1
+  kind: GrafanaInstance
+  chart: helm-charts/grafanainstance
+  reconcilePeriod: 30s

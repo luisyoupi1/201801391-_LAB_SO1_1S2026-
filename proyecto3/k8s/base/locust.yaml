@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: {name: locustfile, namespace: so1-proyecto3}
+data:
+  locustfile.py: |
+    from locust import HttpUser, task, between
+    import json
+    import os
+    import random
+    from datetime import datetime, timezone
+    with open(os.environ["COUNTRIES_FILE"], encoding="utf-8") as catalog_file:
+      COUNTRIES = [entry["code"] for entry in json.load(catalog_file)["countries"]]
+    class WarUser(HttpUser):
+      wait_time = between(0.2, 1)
+      @task
+      def report(self):
+        self.client.post("/grpc-201801391", json={"country": random.choice(COUNTRIES), "warplanes_in_air": random.randint(0,50), "warships_in_water": random.randint(0,30), "timestamp": datetime.now(timezone.utc).isoformat()})
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: locust, namespace: so1-proyecto3}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: locust}}
+  template:
+    metadata: {labels: {app: locust}}
+    spec:
+      initContainers:
+        - name: countries-oci
+          image: ghcr.io/oras-project/oras:v1.2.3
+          args: ["pull", "zot.example.com:5000/so1/countries:v1", "--output", "/artifacts"]
+          volumeMounts: [{name: artifacts, mountPath: /artifacts}]
+      containers:
+        - name: locust
+          image: locustio/locust:2.41.5
+          args: ["-f", "/mnt/locust/locustfile.py", "--host", "http://rust-api:8080"]
+          env: [{name: COUNTRIES_FILE, value: /mnt/artifacts/countries.json}]
+          ports: [{name: web, containerPort: 8089}]
+          volumeMounts:
+            - {name: script, mountPath: /mnt/locust}
+            - {name: artifacts, mountPath: /mnt/artifacts, readOnly: true}
+          resources: {requests: {cpu: 50m, memory: 64Mi}, limits: {cpu: 500m, memory: 256Mi}}
+      volumes:
+        - {name: script, configMap: {name: locustfile}}
+        - {name: artifacts, emptyDir: {}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: locust, namespace: so1-proyecto3}
+spec:
+  selector: {app: locust}
+  ports: [{name: web, port: 8089, targetPort: web}]

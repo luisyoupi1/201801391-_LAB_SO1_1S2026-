@@ -1,0 +1,7 @@
+image: grafana/grafana:12.1.1
+storage: 5Gi
+prometheusUrl: http://prometheus:9090
+adminSecret: mum-secrets
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {cpu: 500m, memory: 512Mi}

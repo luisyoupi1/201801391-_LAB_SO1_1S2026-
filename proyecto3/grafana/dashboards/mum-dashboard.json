@@ -1,0 +1,31 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {"type":"text","title":"M.U.M.N.K8s","gridPos":{"h":3,"w":24,"x":0,"y":0},"options":{"mode":"markdown","content":"# Monitoreo de Unidades Militares en la Nube\n**Carnet 201801391 · País asignado: USA**"}},
+    {"type":"stat","title":"Máximo general de aviones","gridPos":{"h":5,"w":6,"x":0,"y":3},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_planes_max","refId":"A"}],"fieldConfig":{"defaults":{"unit":"short"},"overrides":[]},"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"Mínimo general de aviones","gridPos":{"h":5,"w":6,"x":6,"y":3},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_planes_min","refId":"A"}],"fieldConfig":{"defaults":{"unit":"short"},"overrides":[]},"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"Máximo general de barcos","gridPos":{"h":5,"w":6,"x":12,"y":3},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_ships_max","refId":"A"}],"fieldConfig":{"defaults":{"unit":"short"},"overrides":[]},"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"Mínimo general de barcos","gridPos":{"h":5,"w":6,"x":18,"y":3},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_ships_min","refId":"A"}],"fieldConfig":{"defaults":{"unit":"short"},"overrides":[]},"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"bargauge","title":"Top países por aviones","gridPos":{"h":7,"w":12,"x":0,"y":8},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"topk(5, mum_country_warplanes_total)","legendFormat":"{{country}}","refId":"A"}],"options":{"orientation":"horizontal","displayMode":"gradient","reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"bargauge","title":"Top países por barcos","gridPos":{"h":7,"w":12,"x":12,"y":8},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"topk(5, mum_country_warships_total)","legendFormat":"{{country}}","refId":"A"}],"options":{"orientation":"horizontal","displayMode":"gradient","reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"Moda de aviones","gridPos":{"h":5,"w":6,"x":0,"y":15},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_planes_mode","refId":"A"}],"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"Moda de barcos","gridPos":{"h":5,"w":6,"x":6,"y":15},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_ships_mode","refId":"A"}],"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"stat","title":"País asignado","gridPos":{"h":5,"w":6,"x":12,"y":15},"options":{"textMode":"name","reduceOptions":{"values":false,"calcs":["lastNotNull"]}},"targets":[{"expr":"vector(1)","legendFormat":"USA","refId":"A"}],"datasource":{"type":"prometheus","uid":"prometheus-mum"}},
+    {"type":"stat","title":"Reportes recibidos de USA","gridPos":{"h":5,"w":6,"x":18,"y":15},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_country_reports_total{country=\"USA\"}","refId":"A"}],"options":{"reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"type":"timeseries","title":"USA · aviones en aire","gridPos":{"h":8,"w":12,"x":0,"y":20},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_country_warplanes_current{country=\"USA\"}","legendFormat":"Aviones USA","refId":"A"}],"fieldConfig":{"defaults":{"min":0,"max":50},"overrides":[]}},
+    {"type":"timeseries","title":"USA · barcos en mar","gridPos":{"h":8,"w":12,"x":12,"y":20},"datasource":{"type":"prometheus","uid":"prometheus-mum"},"targets":[{"expr":"mum_country_warships_current{country=\"USA\"}","legendFormat":"Barcos USA","refId":"A"}],"fieldConfig":{"defaults":{"min":0,"max":30},"overrides":[]}}
+  ],
+  "refresh": "5s",
+  "schemaVersion": 41,
+  "tags": ["SO1", "Proyecto3", "201801391"],
+  "templating": {"list": []},
+  "time": {"from":"now-15m","to":"now"},
+  "timezone": "browser",
+  "title": "M.U.M.N.K8s - 201801391",
+  "uid": "mum-201801391",
+  "version": 1
+}

@@ -1,0 +1,15 @@
+apiVersion: so1.usac.edu.gt/v1alpha1
+kind: ValkeyInstance
+metadata: {name: valkey, namespace: so1-proyecto3}
+spec:
+  image: valkey/valkey:8.1-alpine
+  storage: 5Gi
+---
+apiVersion: so1.usac.edu.gt/v1alpha1
+kind: GrafanaInstance
+metadata: {name: grafana, namespace: so1-proyecto3}
+spec:
+  image: grafana/grafana:12.1.1
+  storage: 5Gi
+  prometheusUrl: http://prometheus:9090
+  adminSecret: mum-secrets

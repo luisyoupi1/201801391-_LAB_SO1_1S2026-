@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: consumer, namespace: so1-proyecto3}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: consumer}}
+  template:
+    metadata: {labels: {app: consumer}}
+    spec:
+      containers:
+        - name: consumer
+          image: zot.example.com:5000/so1/consumer:v1
+          env:
+            - name: RABBITMQ_QUEUE
+              valueFrom: {configMapKeyRef: {name: mum-config, key: RABBITMQ_QUEUE}}
+            - name: VALKEY_ADDR
+              valueFrom: {configMapKeyRef: {name: mum-config, key: VALKEY_ADDR}}
+            - name: RABBITMQ_USER
+              valueFrom: {secretKeyRef: {name: mum-secrets, key: RABBITMQ_USER}}
+            - name: RABBITMQ_PASSWORD
+              valueFrom: {secretKeyRef: {name: mum-secrets, key: RABBITMQ_PASSWORD}}
+            - {name: AMQP_URL, value: "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@rabbitmq:5672/"}
+          resources: {requests: {cpu: 50m, memory: 32Mi}, limits: {cpu: 300m, memory: 128Mi}}

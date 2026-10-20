@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mum-operator, namespace: mum-system}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: mum-operator}}
+  template:
+    metadata: {labels: {app: mum-operator}}
+    spec:
+      serviceAccountName: mum-operator
+      containers:
+        - name: operator
+          image: zot.example.com:5000/so1/mum-operator:v1
+          imagePullPolicy: Always
+          args: ["--leader-elect"]
+          env:
+            - {name: WATCH_NAMESPACE, value: ""}
+          resources: {requests: {cpu: 50m, memory: 64Mi}, limits: {cpu: 300m, memory: 256Mi}}
